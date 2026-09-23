@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ridge Construction Corp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --panel:rgba(20,20,22,0.72);
+    --line:rgba(255,255,255,0.08);
+    --text:#e8e8ea;
+    --muted:#9a9aa2;
+    --accent:#2f6bff;
+    --accent-2:#3b82f6;
+    --red:#e23b3b;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{width:100%;max-width:1280px;margin:0 auto;padding:0 28px}
+
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,10,10,0.82);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:0.5px}
+  .brand .mark{width:34px;height:34px;flex:0 0 auto}
+  .brand .name{font-size:15px;line-height:1.1}
+  .brand .name small{display:block;font-weight:600;font-size:10px;letter-spacing:1.5px;color:var(--muted)}
+  .links{display:flex;align-items:center;gap:6px}
+  .links a{
+    font-size:14px;font-weight:500;color:var(--muted);
+    padding:9px 16px;border-radius:999px;border:1px solid transparent;
+    transition:.18s ease;
+  }
+  .links a:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+  .links a.active{color:var(--text);background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.08)}
+  .links a .dot{display:inline-block;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted);margin-right:7px;vertical-align:middle;transform:translateY(-1px)}
+  .links a.active .dot{border-color:var(--text);background:var(--text)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .theme{display:flex;align-items:center;gap:10px;color:var(--muted)}
+  .theme .ico{width:18px;height:18px;opacity:.85}
+  .lang{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+  .lang .globe{width:16px;height:16px;opacity:.8}
+  .lang .chev{width:10px;height:10px;opacity:.6}
+
+  .hero{
+    position:relative;
+    padding:64px 0 80px;
+    background:
+      radial-gradient(1200px 600px at 70% 40%, rgba(47,107,255,0.10), transparent 60%),
+      linear-gradient(180deg,#0a0a0a 0%, #0a0a0a 100%);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 40%,transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 40%,transparent 100%);
+    pointer-events:none;
+  }
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center;min-height:420px}
+  .logo-block{display:flex;flex-direction:column;gap:6px}
+  .logo-block .ridge{
+    font-size:clamp(64px,11vw,168px);font-weight:800;letter-spacing:-2px;line-height:0.92;
+    color:#fff;
+  }
+  .logo-block .ridge .bar{display:block;width:clamp(120px,22vw,260px);height:6px;background:var(--red);margin:10px 0 6px;border-radius:3px}
+  .logo-block .corp{font-size:clamp(40px,7vw,96px);font-weight:800;letter-spacing:-1px;line-height:0.95;color:#fff}
+  .hero-sub{margin-top:26px;font-size:clamp(15px,1.6vw,19px);color:var(--muted);max-width:560px}
+  .hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:18px;text-align:right}
+  .hero-right p{font-size:15px;color:var(--muted);max-width:280px;line-height:1.5}
+  .btns{display:flex;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;
+    border:1px solid transparent;cursor:pointer;transition:.18s ease;
+  }
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-2);transform:translateY(-1px)}
+  .btn-ghost{background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(255,255,255,0.12)}
+  .btn-ghost:hover{background:rgba(255,255,255,0.08)}
+  .scroll-cue{position:absolute;left:28px;bottom:24px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .scroll-cue svg{width:18px;height:18px}
+
+  .services{padding:90px 0 110px;position:relative}
+  .services-head{text-align:center;max-width:760px;margin:0 auto 64px}
+  .services-head .eyebrow{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .services-head h2{font-size:clamp(26px,3.4vw,40px);font-weight:700;letter-spacing:-0.5px;line-height:1.15}
+  .services-head h2 em{font-style:normal;color:var(--accent-2)}
+  .services-head p{margin-top:16px;color:var(--muted);font-size:16px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;position:relative}
+  .cards::before{
+    content:"";position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+    width:70%;height:70%;border-radius:50%;
+    background:radial-gradient(circle,rgba(47,107,255,0.10),transparent 65%);
+    filter:blur(20px);z-index:0;pointer-events:none;
+  }
+  .card{
+    position:relative;z-index:1;
+    background:linear-gradient(180deg,rgba(26,26,30,0.9),rgba(16,16,18,0.9));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:30px 28px 28px;
+    min-height:230px;
+    display:flex;flex-direction:column;
+    transition:.2s ease;
+  }
+  .card:hover{border-color:rgba(47,107,255,0.35);transform:translateY(-3px)}
+  .card h3{font-size:20px;font-weight:700;margin-bottom:12px}
+  .card p{font-size:14px;color:var(--muted);flex:1}
+  .card .icon{margin-top:18px;align-self:flex-end;width:54px;height:54px;opacity:.9}
+  .card.center{align-items:center;text-align:center;justify-content:center;min-height:200px;background:rgba(20,20,22,0.6)}
+  .card.center h3{font-size:17px;margin-bottom:8px}
+  .card.center p{font-size:13px;max-width:220px}
+
+  .cta{padding:40px 0 90px}
+  .cta-box{
+    border:1px solid var(--line);border-radius:24px;
+    padding:48px;text-align:center;
+    background:radial-gradient(800px 300px at 50% 0%,rgba(47,107,255,0.12),transparent 70%);
+  }
+  .cta-box h2{font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-0.5px}
+  .cta-box p{color:var(--muted);margin:12px auto 24px;max-width:520px}
+  .cta-box .btns{justify-content:center}
+
+  footer{border-top:1px solid var(--line);padding:56px 0 28px;background:#080808}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:32px}
+  .foot-brand .brand{margin-bottom:18px}
+  .foot-brand .brand .name{font-size:14px}
+  .foot-brand .brand .name small{font-size:9px}
+  .foot-brand .addr{font-size:13px;color:var(--muted);line-height:1.7}
+  .foot-brand .addr b{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
+  .foot-col h4{font-size:14px;font-weight:600;margin-bottom:14px}
+  .foot-col a{display:block;font-size:13px;color:var(--muted);padding:5px 0;transition:.15s}
+  .foot-col a:hover{color:var(--text)}
+  .foot-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}
+
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .hero-right{align-items:flex-start;text-align:left}
+    .cards{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .links{display:none}
+  }
+  @media (max-width:560px){
+    .foot-grid{grid-template-columns:1fr}
+    .cta-box{padding:32px 22px}
+    .nav-right .theme{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 38 L22 8 L30 8 L14 38 Z" fill="#fff"/>
+        <path d="M22 8 L38 38 L30 38 L22 22 Z" fill="#fff" opacity="0.85"/>
+        <path d="M22 22 L30 38 L22 38 Z" fill="#2f6bff"/>
+      </svg>
+      <span class="name">RIDGE<small>CONSTRUCTION CORP.</small></span>
+    </a>
+    <nav class="links">
+      <a href="#services" class="active"><span class="dot"></span>What We Do</a>
+      <a href="#about">Who We Are</a>
+      <a href="#clients">Our Clients</a>
+      <a href="#connect"><span class="dot"></span>Connect</a>
+    </nav>
+    <div class="nav-right">
+      <div class="theme">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+      </div>
+      <div class="lang">
+        <svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        USA
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="logo-block">
+      <div class="ridge">RIDGE<span class="bar"></span></div>
+      <div class="corp">CONSTRUCTION<br>CORP.</div>
+      <p class="hero-sub">National Retail &amp; Restaurant Tenant Improvement Contractor for 35 years</p>
+    </div>
+    <div class="hero-right">
+      <p>One of North America's leading tenant-improvement general contractors.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="#services">Learn More</a>
+        <a class="btn btn-ghost" href="#connect">Connect</a>
+      </div>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#services" aria-label="Scroll down">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+  </a>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="services-head">
+      <div class="eyebrow">What We Do</div>
+      <h2>Standardized excellence, <em>field-proven</em> expertise</h2>
+      <p>Utilizing our ability to standardize and produce on a level of excellence that is unsurpassed in our field, along with our high-level of field expertise combined with our in-house support personnel.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Pre-Lease</h3>
+        <p>Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="#7a4a3a" stroke-width="2.5"><rect x="14" y="10" width="36" height="44" rx="3"/><path d="M22 22h20M22 30h20M22 38h12"/><path d="M40 6v8M24 6v8" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="card center">
+        <h3>Project Estimating</h3>
+        <p>Identifying options early to make informed decisions.</p>
+      </div>
+
+      <div class="card">
+        <h3>General Construction</h3>
+        <p>Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        <svg class="icon" viewBox="0 0 64 64" fill="none"><path d="M18 46 L32 10 L46 46 Z" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 46h16M32 10v36" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/><circle cx="32" cy="50" r="3" fill="#3b82f6"/></svg>
+      </div>
+
+      <div class="card" style="grid-column:2">
+        <h3>Something Else</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 40 Q22 18 34 26 Q46 34 50 18"/><path d="M46 14l6 4-6 6"/><path d="M18 46l-4 6 6-2"/><path d="M50 18l6 4-4 6"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="connect">
+  <div class="wrap">
+    <div class="cta-box">
+      <h2>Ready to build with Ridge?</h2>
+      <p>Efficient builds in New York City depend on more than just a mastery of materials and methods. Having a team experienced with the ins and outs of building in NYC has proven to help eliminate mistakes, flaws, and costly change orders.</p>
+      <div class="btns">
+        <a class="btn btn-primary" href="mailto:info@ridgecorp.net">Start a Project</a>
+        <a class="btn btn-ghost" href="tel:+17323989677">Call +1 (732) 398-9677</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top">
+          <svg class="mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 38 L22 8 L30 8 L14 38 Z" fill="#fff"/>
+            <path d="M22 8 L38 38 L30 38 L22 22 Z" fill="#fff" opacity="0.85"/>
+            <path d="M22 22 L30 38 L22 38 Z" fill="#e23b3b"/>
+          </svg>
+          <span class="name">RIDGE<small>CONSTRUCTION CORP.</small></span>
+        </a>
+        <div class="addr">
+          <b>Address:</b>
+          280 Towne Centre Drive<br>
+          North Brunswick, NJ 08902<br><br>
+          <b>Office:</b><br>
+          +1 (732) 398-9677<br><br>
+          <b>Email:</b><br>
+          info@ridgecorp.net
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>About</h4>
+        <a href="#about">Who We Are</a>
+        <a href="#services">Our Story</a>
+        <a href="#clients">Careers</a>
+      </div>
+      <div class="foot-col">
+        <h4>Clients</h4>
+        <a href="#clients">Our Clients</a>
+        <a href="#connect">Partnerships</a>
+        <a href="#connect">Case Studies</a>
+      </div>
+      <div class="foot-col">
+        <h4>Support</h4>
+        <a href="#connect">Contact</a>
+        <a href="#connect">FAQ</a>
+        <a href="#connect">Request Estimate</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Partnership</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>North Americas Leading Commercial General Contractor</span>
+      <span>© 2024 All Rights Reserved</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
